@@ -104,7 +104,45 @@ footer a{color:var(--hold)}
   </div>
 
   <section>
-    <h2><span class="n">01</span>Buy these six</h2>
+    <h2><span class="n">00</span>Correction: the new test rejects four of my own six</h2>
+    <p class="sub">Added after publishing. I built the tail test from the seven failures, then ran it
+      against the six I'd already cleared. Honest result:</p>
+    <div class="scroll">
+    <table>
+      <tr><th>Domain</th><th>Tail gate</th><th>What the domain last served</th></tr>
+      <tr><td class="m g">weizen-und-gerstengras.de</td><td class="m g">PASS</td>
+        <td>Real content to 2018, then a self-hosted “Webseite in Wartung” page. Never monetised parking.</td></tr>
+      <tr><td class="m g">bekoemmlich-essen.de</td><td class="m g">PASS</td>
+        <td>Real content into 2024.</td></tr>
+      <tr><td class="m y">martinas-vitamine.de</td><td class="m y">parked tail</td>
+        <td>Content until ~2018, then a “steht zum Verkauf” sales page through 2023.</td></tr>
+      <tr><td class="m y">biochemische-hausapotheke.de</td><td class="m y">parked tail</td>
+        <td>Content to 2015, then parking 2018–2019.</td></tr>
+      <tr><td class="m y">dsl-ernaehrung.de</td><td class="m y">parked tail</td>
+        <td>Content to ~2012, then parking by 2015.</td></tr>
+      <tr><td class="m y">molke-vital-fasten.de</td><td class="m y">parked tail</td>
+        <td>Content to 2009, parking 2018–2022.</td></tr>
+    </table>
+    </div>
+    <div class="note" style="margin-top:22px">
+      <p><b>Both things can't be fully right, so here's my honest read.</b> The tail rule came from
+        seven failures, not a controlled test. And nearly every domain that ends up purchasable went
+        through parking — that's <em>how</em> domains expire. If parking is automatically fatal, almost
+        nothing in any expired-domain pool qualifies, which is itself the finding: the pool is the wrong
+        source. The competitor domains that actually rank went dark <b>straight from live content,
+        never parked</b>.</p>
+      <p><b>What I'd do: buy all six anyway, and treat it as the experiment.</b> Two clean tails, four
+        parked, $17.40 total. If the two rank and the four don't, we've settled the sourcing rule for
+        every future batch at the cost of a takeaway coffee. That's a far better way to find out than
+        another week of me reasoning about it.</p>
+      <p><b>Expectations, stated up front:</b> weizen and bekoemmlich are the real bets. The other four
+        are cheap tickets with a known handicap — don't be surprised when some go nowhere, and don't
+        read their failure as the model failing.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">01</span>The six</h2>
     <div class="scroll">
     <table>
       <tr><th>Domain</th><th>What it was</th><th>Real yrs</th><th>URLs</th><th>Fit</th></tr>
