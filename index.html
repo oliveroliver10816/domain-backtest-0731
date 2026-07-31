@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Backtest — 6 cleared to buy</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B0E14'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%234EC9B0' stroke-width='2'/%3E%3Cpath d='M10 16.5l4 4 8-8.5' fill='none' stroke='%234EC9B0' stroke-width='2.6'/%3E%3Ccircle cx='25' cy='7' r='4' fill='%23FF6B35'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B0E14; --raise:#11151E; --sink:#080B10; --paper:#E8E6E1; --dim:#7A8394;
+  --signal:#FF6B35; --hold:#4EC9B0; --line:#1C2230; --warn:#F5C563;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--body);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+.top{border-bottom:1px solid var(--line);padding:20px 0}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--hold);display:inline-block}
+
+.hero{padding:62px 0 46px;border-bottom:1px solid var(--line)}
+h1{font-family:var(--disp);font-weight:800;letter-spacing:-.035em;line-height:.95;
+  font-size:clamp(38px,7vw,76px);margin:0}
+h1 em{font-style:normal;color:var(--hold)}
+.stand{margin:24px 0 0;max-width:63ch;font-size:clamp(17px,2vw,19px);color:#C3C7CF}
+.stand b{color:var(--paper);font-weight:600}
+
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+h2{font-family:var(--disp);font-weight:600;letter-spacing:-.025em;
+  font-size:clamp(24px,3.6vw,34px);margin:0 0 8px;line-height:1.12}
+h2 .n{font-family:var(--mono);font-size:13px;color:var(--signal);font-weight:700;
+  letter-spacing:.1em;display:block;margin-bottom:10px}
+.sub{color:var(--dim);margin:0 0 26px;font-size:15px;max-width:70ch}
+h3{font-family:var(--disp);font-weight:600;font-size:18px;margin:28px 0 10px;letter-spacing:-.015em}
+
+.copy{border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--sink);margin-top:20px}
+.chead{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;border-bottom:1px solid var(--line)}
+.chead span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+button{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  background:transparent;border:1px solid #2A3242;color:var(--paper);padding:5px 12px;border-radius:2px;
+  cursor:pointer;transition:.15s}
+button:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+button:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+button.done{background:var(--hold);color:var(--ink);border-color:var(--hold)}
+pre{margin:0;padding:15px 14px;font-family:var(--mono);font-size:13px;line-height:1.8;color:#D6DAE1;
+  white-space:pre-wrap;word-break:break-word}
+
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:0 12px 9px 0;border-bottom:1px solid var(--line)}
+td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.m{font-family:var(--mono);font-size:12.5px}
+.g{color:var(--hold)} .r{color:var(--signal)} .y{color:var(--warn)}
+code{font-family:var(--mono);font-size:12.5px;color:#B9C0CC;background:var(--sink);padding:1px 5px;border-radius:3px}
+
+.note{background:var(--raise);border:1px solid var(--line);padding:24px}
+.note p{margin:0 0 12px;font-size:15px;color:#B4BAC5;max-width:66ch}
+.note p:last-child{margin:0}
+.note b{color:var(--paper);font-weight:600}
+.warn{border:1px solid #4A3410;background:#181207;padding:24px}
+.warn h3{margin:0 0 10px;color:var(--warn);font-size:18px}
+.warn p{margin:0 0 11px;font-size:14.5px;color:#D8CDB4}
+.warn p:last-child{margin:0}
+.warn b{color:var(--warn)}
+
+ul.pts{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+ul.pts li{padding-left:26px;position:relative;font-size:14.5px;color:#B4BAC5}
+ul.pts li::before{content:'—';position:absolute;left:0;color:var(--signal);font-family:var(--mono)}
+ul.pts li b{color:var(--paper);font-weight:600}
+
+footer{padding:36px 0 70px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.06em;line-height:1.9}
+footer a{color:var(--hold)}
+@media(max-width:600px){ .hero{padding:44px 0 36px} }
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <div class="eyebrow">
+    <span><span class="dot"></span> Backtest complete</span>
+    <span>6 cleared · 6 dropped · 4 in progress</span>
+    <span>31 Jul 2026</span>
+  </div>
+</div></div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>6 cleared.<br><em>6 dropped.</em></h1>
+    <p class="stand">Every archived year read on every domain, not one snapshot. It was worth doing —
+      one of your top picks spent 2022–2025 as <b>a jewellery link farm</b>, another served
+      <b>hidden pharma spam</b>, and two owners the earlier pass marked "verified dead" are still
+      trading. All six survivors re-verified free at DENIC this session.</p>
+  </div>
+
+  <section>
+    <h2><span class="n">01</span>Buy these six</h2>
+    <div class="scroll">
+    <table>
+      <tr><th>Domain</th><th>What it was</th><th>Real yrs</th><th>URLs</th><th>Fit</th></tr>
+      <tr><td class="m g">martinas-vitamine.de</td><td>German vitamin mail-order shop + forum, 2001–2018</td>
+        <td class="m">~16</td><td class="m">1,168</td><td>★★★★★ its own nav already had “Abnehmen – Zucker- und Fett-Stopp”</td></tr>
+      <tr><td class="m g">bekoemmlich-essen.de</td><td>Vegetarian food blog, 2013–2022</td>
+        <td class="m">~9</td><td class="m">424</td><td>★★★★ cleanest record in the whole set — no affiliate anything, ever</td></tr>
+      <tr><td class="m g">biochemische-hausapotheke.de</td><td>Schüßler-Salze reference site, 2011–2015</td>
+        <td class="m">5</td><td class="m">73</td><td>★★★★ lowest owner risk of all — a private individual, no business</td></tr>
+      <tr><td class="m g">weizen-und-gerstengras.de</td><td>Barley/wheatgrass <b>supplement shop</b>, 2001–2017</td>
+        <td class="m">~17</td><td class="m">30</td><td>★★★★★ already has Anwendung / Inhaltsstoffe / Dosierung / Preise</td></tr>
+      <tr><td class="m g">dsl-ernaehrung.de</td><td>Nutrition microsite of a seniors' association, 2004–2012</td>
+        <td class="m">~7</td><td class="m">30</td><td>★★★ association formally dissolved April 2024</td></tr>
+      <tr><td class="m g">molke-vital-fasten.de</td><td>Whey-fasting site, 2004–2009</td>
+        <td class="m">6</td><td class="m">18</td><td>★★★★★ every page already carried Fasten / Abnehmen / Übergewicht</td></tr>
+    </table>
+    </div>
+    <div class="copy">
+      <div class="chead"><span>6 domains · $17.40</span><button data-c="d">Copy</button></div>
+      <pre id="d">martinas-vitamine.de
+bekoemmlich-essen.de
+biochemische-hausapotheke.de
+weizen-und-gerstengras.de
+dsl-ernaehrung.de
+molke-vital-fasten.de</pre>
+    </div>
+    <p class="sub" style="margin-top:20px;margin-bottom:0">Slots 7–10 are being content-checked right now
+      — same era-replay pass that caught the two spam domains. Candidates:
+      <code>123-gesund-leben.de</code>, <code>ernaehrungstip.de</code>,
+      <code>gesund-laenger-leben.de</code>, <code>diaeten-info.de</code>. Splitting registration across
+      two days is better for footprint anyway.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">02</span>Why the other six are gone</h2>
+    <div class="scroll">
+    <table>
+      <tr><th>Domain</th><th>Reason</th></tr>
+      <tr><td class="m r">praxisritscher.de</td><td>Served hidden <code>display:none</code> pharma link blocks with 46 drug terms, 9 Jan – 3 Apr 2011. Dated and verbatim. Also a living practitioner whose phone-book listing still names this domain.</td></tr>
+      <tr><td class="m r">ernaehrung-hautpflege.de</td><td>Died as somebody else's project — a jewellery link farm actively maintained 2022–2025, WordPress upgraded through the period. Ran straight through Google's expired-domain-abuse enforcement window.</td></tr>
+      <tr><td class="m r">kloster-apotheke-koeln.de</td><td>A real licensed pharmacy with a named pharmacist. 290 of its 298 paths are shared boilerplate duplicated across hundreds of German pharmacy sites — it never earned its own rankings. Exactly the asset shape that took our slots on 25 July.</td></tr>
+      <tr><td class="m r">aerzte-werdenfels.de</td><td>The skeleton is a directory of named physicians — 66 pages of real doctors and three articles in seventeen years. The association is still alive on another domain.</td></tr>
+      <tr><td class="m r">fasten-am-meer.de</td><td>Four restorable pages in the whole archive, and the text is holiday-lettings copy, not fasting content. Last owner still trades.</td></tr>
+      <tr><td class="m r">mlpd-ernaehrungsberatung.de</td><td>Political-party question <b>cleared</b> — MLPD is the practitioner's own initials, zero political content. Dropped anyway: the entire site is one PHP file, so there's no URL skeleton to restore, which was the whole point.</td></tr>
+    </table>
+    </div>
+    <p class="sub" style="margin-top:18px;margin-bottom:0">Also rejected off the bench:
+      <code>leichterlaengerleben.de</code> — the owner is alive, competing in our exact vertical, holds
+      a registered trademark, and the domain is literally his book's subtitle. No lens had checked him,
+      because the domain has <b>zero Impressum captures</b> — his identity was buried in the terms page.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">03</span>Two corrections that change the numbers</h2>
+    <div class="warn" style="margin-bottom:20px">
+      <h3>“Live years” was counting parking pages</h3>
+      <p>The buy list credited <code>molke-vital-fasten.de</code> with 16 years. Read properly, it has
+        <b>6 real content years</b> — the rest were Sedo parking templates being counted as live pages.
+        Every figure in the table above is the corrected one. It doesn't change the buy, but it changes
+        what we think we're getting.</p>
+    </div>
+    <div class="note">
+      <p><b>On your Apotheke pick — you get one, and it's the safe one.</b>
+        <code>kloster-apotheke-koeln.de</code> is out: real pharmacy, named pharmacist, and its pages
+        were network boilerplate.</p>
+      <p>But <code>biochemische-hausapotheke.de</code> survives and came back as the
+        <b>lowest owner risk in the entire set</b> — because it was never a pharmacy. "Biochemische
+        Hausapotheke" is the ordinary German term for the twelve-salt Schüßler home kit, and its
+        Impressum declares a private individual with no business at all. Apotheke in the name, zero
+        designation exposure.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">04</span>The publishing schedule</h2>
+    <p class="sub">Per domain. The whole design is that no two of our sites ever look coordinated — the
+      fleet that displaced us pushed 9 domains in 66–179 seconds, and that timing is the cheapest
+      fingerprint there is to detect.</p>
+    <div class="scroll">
+    <table>
+      <tr><th>When</th><th>New pages</th><th>What goes live</th></tr>
+      <tr><td class="m">Day 1</td><td class="m">6</td><td>Home, Impressum, Datenschutz, Kontakt + 2 legacy topic pages. Sitemap, robots, favicon. <b>Zero affiliate links anywhere.</b></td></tr>
+      <tr><td class="m">Days 2–7</td><td class="m">+4</td><td>Legacy pages, roughly one every other day</td></tr>
+      <tr><td class="m">Week 2</td><td class="m">+6</td><td>Legacy pages + first category hub</td></tr>
+      <tr><td class="m">Week 3</td><td class="m">+8</td><td>Legacy pages; internal linking hardened</td></tr>
+      <tr><td class="m">Week 4</td><td class="m">+8</td><td>First commercial-intent guide — <b>still no offer link</b></td></tr>
+      <tr><td class="m">Week 5</td><td class="m">+8</td><td><b>First offer page.</b> One per domain, via the noindex hop</td></tr>
+      <tr><td class="m">Week 6</td><td class="m">+10</td><td>Second offer page — only on the three domains with deep archives</td></tr>
+    </table>
+    </div>
+    <h3>Cross-fleet rules</h3>
+    <ul class="pts">
+      <li><b>Never more than 4 domains publish in the same 24 hours</b>, and never two in the same hour.
+        Minimum 90 minutes apart, jittered ±40.</li>
+      <li><b>German business hours, never on a round hour</b>, and each domain skips one random weekday a
+        week. Real sites are irregular.</li>
+      <li><b>Two launches a day maximum</b> — ten domains means five launch days spread over 10–12 days.
+        Don't launch all six this week.</li>
+      <li><b>The same offer on four domains maximum</b>, and those four must be the four with the most
+        different histories — a shop, a food blog, a fasting site, a seniors' portal. Four different
+        days, 48 hours apart, genuinely different page structure each time.</li>
+      <li><b>Offer pages only from week 5</b>, and only once the domain has ~25 non-commercial pages
+        indexed. A restored domain whose first ten pages are product reviews is a fresh affiliate shell
+        wearing a costume — that's the 11-day-old profile that got re-scored on 25 July.</li>
+      <li><b>One sitemap submission per day across the whole fleet.</b> Don't batch ten.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">05</span>What we never carry over</h2>
+    <div class="note">
+      <p>We restore the <b>paths and the topics</b>. All the German copy is new. Nothing identifying the
+        previous operator is reproduced anywhere — not the name, address, phone, VAT or register number,
+        not the Impressum, not photos or logos, not the trade name in a title, and not the text even
+        where the text is good. That includes alt text and structured data.</p>
+      <p>Two specific ones: the Schüßler-salt book on <code>biochemische-hausapotheke.de</code> is a
+        copyrighted work — we reuse the topic list, never a sentence. And the old practitioner
+        directories don't come back in any form.</p>
+      <p>Each site gets its <b>own</b> Impressum naming your US company, its own privacy page, its own
+        affiliate disclosure and its own contact page.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">06</span>Buying</h2>
+    <div class="note">
+      <p><b>Good news on one Porkbun account: DENIC publishes no registrant data at all.</b> A `.de`
+        whois returns a status line and nothing else — no name, no address, no history. So holding all
+        ten under one record isn't publicly observable, and WHOIS privacy is neither available nor
+        needed. On `.de` the footprint that matters is nameservers, IP addresses and publishing timing,
+        not the registrar.</p>
+      <p><b>Porkbun's API does registration</b> — v3.9, and there's an official MCP server. API keys take
+        per-key IP restrictions and <b>spend controls</b>. Create one, cap it at $30, and I'll buy all
+        ten myself. That's the only step I can't do without you.</p>
+      <p>Six domains today is <b>$17.40</b>. Ten is $29.</p>
+    </div>
+  </section>
+
+  <footer>
+    6 agents · 497 checks · 60,000+ CDX rows · 240 archived pages replayed across every live year<br>
+    One adversarial pass overturned 12 of 13 initial clears — the six above are what survived it.<br>
+    Read-only: nothing registered, bid on, or contacted. All six re-verified free at DENIC this session.<br>
+    Related: <a href="https://oliveroliver10816.github.io/fleet-buylist-0730/">the 68-domain pool</a> ·
+    <a href="https://oliveroliver10816.github.io/competitor-forensics-0729/">competitor forensics</a>
+  </footer>
+
+</div>
+<script>
+document.querySelectorAll('button[data-c]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var t=document.getElementById(b.dataset.c).innerText;
+    var done=function(){var o=b.textContent;b.textContent='Copied';b.classList.add('done');
+      setTimeout(function(){b.textContent=o;b.classList.remove('done');},1600);};
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(done,function(){fb(t,done);});}
+    else{fb(t,done);}
+  });
+});
+function fb(text,cb){var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');
+  ta.style.cssText='position:absolute;left:-9999px';document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');cb();}catch(e){}document.body.removeChild(ta);}
+</script>
+</body>
+</html>
